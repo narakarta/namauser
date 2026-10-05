@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Undangan Pernikahan Wencen & Apriliana</title>
+<meta name="description" content="Kami mengundang Anda di hari bahagia Wencen & Apriliana.">
+<meta property="og:title" content="Undangan Pernikahan Wencen & Apriliana">
+<meta property="og:description" content="Kami mengundang Anda di hari bahagia kami. Buka undangan untuk detail acara.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=Caveat:wght@600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<!--
+=== GOOGLE SHEETS (Apps Script) ===
+1. Buat Google Sheet dengan 3 tab. Baris 1 = judul kolom:
+   RSVP dan Ucapan : Waktu, Nama, Status, Jumlah, Ucapan, Kunci Link
+   Tamu            : Waktu, Nama, Kunci Link, Kode
+2. Extensions > Apps Script, tempel kode ini. Isi ADMIN dengan nilai yang sama dengan C.adminKey di HTML.
+   Lalu Deploy > New deployment > Web app (Execute as: Me, Who has access: Anyone).
+   Salin URL-nya ke CONFIG.sheetUrl di bawah.
+
+var ADMIN='ganti-kunci-ini';
+function out(t){return ContentService.createTextOutput(t)}
+function nk(s){return String(s).toLowerCase()}
+function doPost(e){
+  var d=JSON.parse(e.postData.contents), ss=SpreadsheetApp.getActive(), lock=LockService.getScriptLock();
+  lock.waitLock(10000);
+  try{
+    var tamu=ss.getSheetByName('Tamu'), tv=tamu.getDataRange().getValues(), i;
+    if(d.type=='guest'){
+      if(d.adminKey!==ADMIN) return out('forbidden');
+      for(i=1;i<tv.length;i++){ if(nk(tv[i][2])===nk(d.key)) return out('exists'); }
+      tamu.appendRow([new Date(),d.name,d.key,d.code]);
+      return out('ok');
+    }
+    if(d.type=='admin'){
+      if(d.adminKey!==ADMIN) return out('forbidden');
+      var s0=ss.getSheetByName({rsvp:'RSVP',wish:'Ucapan',tamu:'Tamu'}[d.sheet]), kc=d.sheet=='tamu'?2:5;
+      var v0=s0.getDataRange().getValues(), r=0;
+      for(i=1;i<v0.length;i++){ if(nk(v0[i][kc])===nk(d.key)){r=i+1;break;} }
+      if(!r) return out('notfound');
+      if(d.action=='delete'){ s0.deleteRow(r); return out('ok'); }
+      s0.getRange(r,2).setValue(d.name);
+      if(d.sheet=='rsvp') s0.getRange(r,3,1,2).setValues([[d.status,d.count]]);
+      if(d.sheet=='wish') s0.getRange(r,5).setValue(d.msg);
+      if(d.sheet=='tamu'&&d.code) s0.getRange(r,4).setValue(d.code);
+      return out('ok');
+    }
+    var valid=false, gname='', gkey='';
+    for(i=1;i<tv.length;i++){ if(nk(tv[i][2])===nk(d.key)&&String(tv[i][3])===String(d.code)){valid=true;gname=tv[i][1];gkey=tv[i][2];break;} }
+    if(!valid) return out('invalid');
+    var sh=ss.getSheetByName(d.type=='rsvp'?'RSVP':'Ucapan');
+    var row=[new Date(),gname,d.status||'',d.count||'',d.msg||'',gkey];
+    var v=sh.getDataRange().getValues(), idx=0;
+    for(i=1;i<v.length;i++){ if(nk(v[i][5])===nk(gkey)){idx=i+1;break;} }
+    if(idx) sh.getRange(idx,1,1,6).setValues([row]); else sh.appendRow(row);
+    return out('ok');
+  } finally { lock.releaseLock(); }
+}
+function doGet(e){
+  var ss=SpreadsheetApp.getActive();
+  function r(n){return ss.getSheetByName(n).getDataRange().getValues().slice(1)}
+  var o={rsvp:r('RSVP'),wishes:r('Ucapan')};
+  if(e&&e.parameter&&e.parameter.admin===ADMIN) o.tamu=r('Tamu');
+  return out(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
+}
+-->
+<style>
+:root{--lagoon:#A8553A;--deep:#3B281C;--aqua:#B5BFA0;--sky:#E7EADB;--foam:#FAF5EA;--sun:#D9A441;--coral:#D68B7C;--sage:#7F8F6A;--bg:var(--foam);--card:#FFFCF5;--tx:#3B281C;--mut:#7B6653;--mw:760px;
+--w:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 70' preserveAspectRatio='none'%3E%3Cpath d='M0 0H1200V6Q600 110 0 6Z'/%3E%3C/svg%3E")}
+:root[data-theme=dark]{--bg:#1F1610;--card:#2B2018;--tx:#F2E6D2;--mut:#C4B198;--sky:#261C15;--lagoon:#C0643F;--aqua:#6F7C5E}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+body{font:400 1rem/1.75 Jost,system-ui,sans-serif;background:var(--bg);color:var(--tx);overflow-x:hidden}
+body.lock{overflow:hidden}
+h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;line-height:1.1}
+section{padding:72px 20px;max-width:var(--mw);margin:auto;text-align:center}
+section h2{font:italic 700 clamp(34px,8vw,48px)/1.05 'Cormorant Garamond',Georgia,serif;color:var(--lagoon);margin-bottom:6px}
+:root[data-theme=dark] section h2{color:var(--sun)}
+section h2::before{content:"";display:block;width:54px;height:26px;margin:0 auto 10px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 54 26'%3E%3Cpath d='M27 24V8' stroke='%237F8F6A' stroke-width='1.6' stroke-linecap='round'/%3E%3Cellipse cx='19' cy='14' rx='9' ry='4' transform='rotate(-35 19 14)' fill='%237F8F6A'/%3E%3Cellipse cx='35' cy='14' rx='9' ry='4' transform='rotate(35 35 14)' fill='%237F8F6A'/%3E%3Ccircle cx='27' cy='5' r='3.5' fill='%23A8553A'/%3E%3C/svg%3E") center/contain no-repeat}
+.sub{color:var(--mut);margin-bottom:26px}
+h2+.sub{font:600 24px/1.25 Caveat,cursive;color:var(--sage)}
+#salam>.sub:first-child{font:600 12px Jost,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--mut)}
+.band{position:relative;background:var(--sky)}
+.band>.in{max-width:var(--mw);margin:auto;padding-top:clamp(80px,18vw,96px);padding-bottom:clamp(80px,18vw,96px)}
+.band::before,.band::after,footer::before{content:"";position:absolute;left:0;right:0;height:60px;background:var(--bg);pointer-events:none;-webkit-mask:var(--w) center/100% 100% no-repeat;mask:var(--w) center/100% 100% no-repeat}
+.band::before{top:-1px}
+.band::after{bottom:-1px;transform:scaleY(-1)}
+.band.nb::after{display:none}
+.card{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 10px 30px rgba(110,70,40,.1)}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.btn{display:inline-block;border:0;border-radius:999px;padding:13px 28px;font:600 13px Jost,sans-serif;letter-spacing:.1em;text-transform:uppercase;background:var(--lagoon);color:#fff;cursor:pointer;text-decoration:none;transition:transform .15s;box-shadow:0 6px 14px rgba(168,85,58,.28)}
+.btn:hover{transform:translateY(-2px)}
+.btn.sun{background:var(--sun);color:var(--deep);box-shadow:0 6px 14px rgba(217,164,65,.35)}
+.btn.out{background:transparent;color:var(--lagoon);border:2px solid var(--lagoon);box-shadow:none}
+:root[data-theme=dark] .btn.out{color:var(--sun);border-color:var(--sun)}
+.btn.sm{padding:8px 16px;font-size:11px}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+[hidden]{display:none!important}
+/* cover: jendela lengkung */
+#cover{position:fixed;inset:0;z-index:50;display:flex;overflow-x:hidden;overflow-y:auto;text-align:center;padding:30px 24px;background-color:var(--bg);background-image:radial-gradient(120% 60% at 50% 105%,rgba(217,139,99,.34),transparent 70%),radial-gradient(rgba(120,90,60,.1) 1px,transparent 1.4px);background-size:auto,20px 20px;transition:transform .9s cubic-bezier(.7,0,.2,1)}
+#cover.out{transform:translateY(-101%)}
+#cover::before{content:"";position:absolute;inset:12px;border:2px solid var(--lagoon);border-radius:26px;opacity:.5;pointer-events:none}
+#cover::after{content:"";position:absolute;inset:19px;border:1px dashed var(--sage);border-radius:20px;pointer-events:none}
+.cv{position:relative;z-index:1;margin:auto;padding:14px 0}
+.cap{display:block;font:600 12px Jost,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--mut)}
+.arch{display:block;width:clamp(120px,min(46vw,26vh),200px);height:auto;margin:14px auto 10px;filter:drop-shadow(0 12px 18px rgba(110,70,40,.25))}
+#cover h1{font:italic 700 clamp(40px,12vw,66px)/.95 'Cormorant Garamond',Georgia,serif;color:var(--tx);margin:4px 0}
+#cover h1 i{display:block;font:600 .55em/1 Caveat,cursive;color:var(--lagoon);margin:2px 0}
+.cdate{font:600 13px Jost,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--lagoon);margin:6px 0 14px}
+.tamu{display:inline-block;margin:0 0 16px;padding:12px 26px;border-radius:14px;background:var(--card);border:1.5px dashed var(--lagoon)}
+.tamu small{display:block;color:var(--mut);font-size:12px;letter-spacing:.06em}
+.tamu b{display:block;font:italic 700 24px 'Cormorant Garamond',Georgia,serif}
+@media(max-height:640px){.arch{width:90px;margin:8px auto}#cover h1{font-size:36px}.tamu{padding:8px 16px;margin-bottom:10px}}
+/* salam */
+.ayat{font-style:italic;color:var(--mut);max-width:560px;margin:18px auto;padding:22px 20px;background:var(--card);border:1.5px dashed var(--sage);border-radius:18px}
+/* mempelai */
+.mp{grid-template-columns:1fr;gap:6px;align-items:start}
+.mp .card{background:transparent;box-shadow:none;padding:6px}
+.amp2{font:italic 700 56px/1 'Cormorant Garamond',Georgia,serif;color:var(--lagoon)}
+@media(min-width:640px){.mp{grid-template-columns:1fr auto 1fr;align-items:center}}
+.foto{width:min(72%,200px);aspect-ratio:3/4;border-radius:50% 50% 22px 22px/38% 38% 22px 22px;margin:0 auto 16px;display:grid;place-items:center;font:italic 700 64px 'Cormorant Garamond',Georgia,serif;color:#fff;background:linear-gradient(160deg,var(--lagoon),var(--sage));background-size:cover;background-position:center;border:6px solid var(--card);outline:2px solid var(--lagoon);outline-offset:3px;box-shadow:0 14px 28px rgba(110,70,40,.22)}
+.foto.b{background:linear-gradient(160deg,var(--coral),var(--sun));background-size:cover;background-position:center}
+.nama{font:italic 700 clamp(26px,6vw,32px)/1.1 'Cormorant Garamond',Georgia,serif}
+/* kisah cinta */
+.tl{position:relative;padding-left:34px;text-align:left}
+.tl::before{content:"";position:absolute;left:10px;top:6px;bottom:6px;width:2px;background:repeating-linear-gradient(var(--sage) 0 6px,transparent 6px 12px)}
+.tl>div{position:relative;background:var(--card);border-radius:16px;padding:16px 18px;box-shadow:0 8px 22px rgba(110,70,40,.09);margin-bottom:16px}
+.tl>div::before{content:"";position:absolute;left:-31px;top:20px;width:14px;height:14px;border-radius:50%;background:var(--sun);border:3px solid var(--bg)}
+.tl h3{font:italic 700 22px 'Cormorant Garamond',Georgia,serif;color:var(--lagoon)}
+@media(min-width:700px){.tl{padding:0}.tl::before{left:calc(50% - 1px)}.tl>div{width:calc(50% - 30px)}.tl>div:nth-child(even){margin-left:auto}.tl>div::before{left:auto;right:-39px}.tl>div:nth-child(even)::before{right:auto;left:-39px}}
+/* acara */
+.cd{display:flex;gap:10px;justify-content:center;margin:6px 0 26px;flex-wrap:wrap}
+h2+.cd{margin-top:22px}
+.cd div{width:72px;height:72px;border-radius:50%;display:grid;place-content:center;background:var(--card);border:2px solid var(--sun);box-shadow:0 6px 14px rgba(110,70,40,.12)}
+.cd b{font:italic 700 26px/1 'Cormorant Garamond',Georgia,serif;color:var(--lagoon)}
+:root[data-theme=dark] .cd b{color:var(--sun)}
+.cd span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-top:2px}
+#events{grid-template-columns:1fr}
+.ev{display:flex;padding:0;overflow:hidden;text-align:left}
+.dt{flex:0 0 92px;background:var(--lagoon);color:#fff;display:grid;place-content:center;text-align:center;padding:14px 6px;line-height:1.15}
+.dt b{font:italic 700 42px/1 'Cormorant Garamond',Georgia,serif}
+.dt span{text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:600}
+.dt small{font-size:11px;opacity:.85;margin-top:4px}
+.ed{padding:18px 20px}
+.ed h3{font:italic 700 26px 'Cormorant Garamond',Georgia,serif;color:var(--lagoon);margin-bottom:4px}
+:root[data-theme=dark] .ed h3{color:var(--sun)}
+/* lokasi, galeri */
+.vid{width:100%;border:0;border-radius:20px;margin-top:20px;aspect-ratio:16/9}
+#map{border-radius:150px 150px 22px 22px;border:6px solid var(--card);outline:2px solid var(--sage);outline-offset:3px;box-shadow:0 14px 28px rgba(110,70,40,.18);margin-top:6px}
+.gal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(6,minmax(0,1fr));aspect-ratio:4/6;gap:8px;width:100%}
+.gal button:nth-child(1){grid-area:1/1/span 2/span 2}
+.gal button:nth-child(2){grid-area:1/3}
+.gal button:nth-child(3){grid-area:1/4/span 2}
+.gal button:nth-child(4){grid-area:2/3}
+.gal button:nth-child(5){grid-area:3/1/span 2}
+.gal button:nth-child(6){grid-area:3/2/span 2/span 2}
+.gal button:nth-child(7){grid-area:3/4}
+.gal button:nth-child(8){grid-area:4/4}
+.gal button:nth-child(9){grid-area:5/1/span 2}
+.gal button:nth-child(10){grid-area:5/2}
+.gal button:nth-child(11){grid-area:5/3/span 2/span 2}
+.gal button:nth-child(12){grid-area:6/2}
+.gal button{height:100%;width:100%;min-width:0;border:4px solid var(--card);border-radius:14px;cursor:zoom-in;font-size:30px;color:var(--deep);background-size:cover;background-position:center;background-color:var(--aqua);box-shadow:0 6px 14px rgba(110,70,40,.15)}
+.gal button:nth-child(3n){background-color:var(--sun)}
+.gal button:nth-child(3n+1){background-color:var(--coral)}
+.gal button:nth-child(1),.gal button:nth-child(11){border-radius:50% 50% 14px 14px/50% 50% 14px 14px}
+#lb{position:fixed;inset:0;z-index:80;background:rgba(36,24,16,.9);display:none;place-items:center;padding:20px}
+#lb.on{display:grid}
+#lb div{width:min(90vw,520px);aspect-ratio:1;border-radius:22px;background-size:cover;background-position:center;display:grid;place-items:center;font-size:90px}
+/* formulir */
+form{text-align:left;display:grid;gap:14px}
+form.card{border:1.5px dashed var(--sage);box-shadow:none;border-radius:22px;padding:26px 24px}
+label{font:600 11px Jost,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+input,select,textarea{width:100%;padding:10px 2px;border:0;border-bottom:2px solid var(--aqua);border-radius:0;font:inherit;background:transparent;color:var(--tx)}
+textarea{min-height:90px;resize:vertical}
+input[readonly]{opacity:.75;border-bottom-style:dashed;cursor:not-allowed}
+.msg{margin-top:10px;font-weight:600}
+.ok{color:#0F9D6B}.er{color:#D6455D}
+.ws{max-height:min(380px,60vh);overflow:auto;text-align:left;display:grid;gap:10px;margin-top:20px}
+.ws .card{padding:14px 18px;border-radius:14px;border-left:4px solid var(--sun)}
+.ws b{color:var(--lagoon)}.ws small{color:var(--mut)}
+/* hadiah, info */
+.bank{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;flex-wrap:wrap;border:1.5px dashed var(--sage);box-shadow:none}
+.bank b{font-size:18px;letter-spacing:.04em}
+.qris{width:200px;height:200px;margin:14px auto;border-radius:18px;border:2px dashed var(--sage);display:grid;place-items:center;color:var(--mut);font-size:13px;background-size:cover}
+#info .card{border-left:5px solid var(--lagoon)}
+#info .card h3{font:italic 700 24px 'Cormorant Garamond',Georgia,serif;color:var(--lagoon)}
+:root[data-theme=dark] #info .card h3{color:var(--sun)}
+/* footer kayu */
+footer{position:relative;padding:64px 20px 90px;text-align:center;background:var(--deep) repeating-linear-gradient(90deg,transparent 0 46px,rgba(255,255,255,.045) 46px 48px);color:#EADBC4}
+footer::before{top:-59px;background:var(--deep);transform:scaleY(-1)}
+footer h2{font:italic 700 42px 'Cormorant Garamond',Georgia,serif;color:var(--sun)}
+footer small{opacity:.7;display:block;margin-top:18px}
+/* tombol melayang */
+.fab{position:fixed;right:max(14px,env(safe-area-inset-right));z-index:40;width:46px;height:46px;border-radius:50%;border:0;background:var(--lagoon);color:#fff;font-size:20px;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.25);display:none}
+body.open .fab{display:block}
+#mus{bottom:calc(16px + env(safe-area-inset-bottom))}#thm{bottom:calc(70px + env(safe-area-inset-bottom));background:var(--sun);color:var(--deep)}
+#mus.spin{animation:sp 4s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+/* animasi masuk */
+.rv>*{opacity:0;transform:translateY(26px) scale(.97);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.rv.on>*{opacity:1;transform:none}
+.rv .g2>*{opacity:0;transform:translateY(32px) scale(.96);transition:opacity .8s .3s,transform .8s .3s cubic-bezier(.2,.8,.2,1)}
+.rv.on .g2>*{opacity:1;transform:none}
+.tl>div{opacity:0;transform:translateY(20px);transition:.7s}
+.rv.on .tl>div{opacity:1;transform:none}
+.cd div{opacity:0;transform:rotateX(90deg);transition:.7s .3s}
+.rv.on .cd div{opacity:1;transform:none}
+.gal button{opacity:0;transform:scale(.6);transition:.6s}
+.rv.on .gal button{opacity:1;transform:none}
+/* admin */
+#adm{display:none;background:#fff8dc;color:#333;padding:20px;border-bottom:4px solid var(--sun);text-align:left;font-family:Jost,system-ui,sans-serif}
+#adm.on{display:block}
+#adm h3{font:700 20px Jost,sans-serif;color:#333}
+#adm input,#adm select,#adm textarea{border:2px solid #bbb;border-radius:10px;color:#333;background:#fff;padding:8px;font-size:14px}
+#adm a{color:#A8553A;word-break:break-all}
+#editor{max-height:460px;overflow:auto}
+.er-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;align-items:center;padding:12px;border:1px solid #e0d6b5;border-radius:12px;margin:8px 0;background:#fff}
+.er-row small{grid-column:1/-1;word-break:break-all}
+.er-row[hidden]{display:none}
+img,iframe{max-width:100%}
+@media(max-width:380px){.cd{gap:6px}.cd div{width:62px;height:62px}.btn{padding:11px 20px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv>*,.rv .g2>*,.tl>div,.cd div,.gal button{opacity:1!important;transform:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body class="lock">
+
+<!-- Panel admin: buka dengan ?admin=KUNCI (lihat CONFIG.adminKey) -->
+<div id="adm">
+ <h3>Dashboard Admin</h3>
+ <p id="stat">Memuat data…</p>
+ <h3 style="font-size:17px;margin-top:14px">Link undangan tamu</h3>
+ <input id="admSearch" type="search" placeholder="Cari nama atau link…" aria-label="Cari link tamu" style="margin-bottom:4px"><small id="admCount"></small>
+ <div id="editor"></div>
+ <h3 style="font-size:17px">Generator link tamu</h3>
+ <p style="font-size:13px">Satu nama per baris. Tiap link siap dikirim lewat WhatsApp.</p>
+ <textarea id="names" placeholder="Budi Santoso&#10;Siti Aminah"></textarea>
+ <button class="btn sm" id="gen" type="button" style="margin:8px 0">Buat link</button>
+ <div id="links"></div>
+</div>
+
+<div id="cover">
+ <div class="cv">
+  <span class="cap">Undangan Pernikahan</span>
+  <svg class="arch" viewBox="0 0 200 250" role="img" aria-label="Ilustrasi taman saat senja">
+   <defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F6DDBA"/><stop offset=".55" stop-color="#EDB48A"/><stop offset="1" stop-color="#D98B63"/></linearGradient><clipPath id="ar"><path d="M0 250V100A100 100 0 0 1 200 100V250Z"/></clipPath></defs>
+   <g clip-path="url(#ar)">
+    <rect width="200" height="250" fill="url(#sk)"/>
+    <circle cx="132" cy="122" r="54" fill="#FFF1D2" opacity=".28"/><circle cx="132" cy="122" r="34" fill="#FFF1D2" opacity=".92"/>
+    <path d="M0 172Q50 142 100 166T200 152V250H0Z" fill="#B5BFA0"/><path d="M0 198Q60 172 110 192T200 182V250H0Z" fill="#8F9F79"/><path d="M0 224Q70 204 120 218T200 210V250H0Z" fill="#6E7F5C"/>
+    <g stroke="#4F5E41" stroke-width="1.6" fill="none" stroke-linecap="round"><path d="M40 250C38 226 44 206 42 184"/><path d="M62 250C64 230 58 216 60 196"/><path d="M158 250C160 228 154 212 157 190"/><path d="M176 250C174 232 179 220 177 204"/></g>
+    <g fill="#C98B64"><ellipse cx="42" cy="178" rx="5" ry="11"/><ellipse cx="60" cy="189" rx="4.5" ry="10"/><ellipse cx="157" cy="181" rx="5" ry="11"/><ellipse cx="177" cy="198" rx="4" ry="9"/></g>
+    <g fill="#E58E9A"><circle cx="50" cy="214" r="4"/><circle cx="146" cy="216" r="4"/><circle cx="168" cy="226" r="3.5"/></g>
+   </g>
+   <path d="M0 250V100A100 100 0 0 1 200 100V250" fill="none" stroke="#A8553A" stroke-width="3"/>
+  </svg>
+  <h1>Wencen<i>&</i>Apriliana</h1>
+  <p class="cdate" id="coverDate"></p>
+  <div class="tamu"><small>Kepada Yth. Bapak/Ibu/Saudara/i</small><b id="guest">Tamu Undangan</b></div><br>
+  <button class="btn sun" id="openBtn" type="button">Buka Undangan</button>
+ </div>
+</div>
+
+<section id="salam" class="rv">
+ <p class="sub">Assalamu'alaikum Warahmatullahi Wabarakatuh</p>
+ <h2 class="nama">Kami Menikah</h2>
+ <p class="ayat">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan pasangan untukmu dari jenismu sendiri, agar kamu merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang." (QS. Ar-Rum: 21)</p>
+ <p>Dengan penuh syukur, kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu di hari pernikahan kami.</p>
+</section>
+
+<div class="band"><section id="mempelai" class="in rv">
+ <h2>Mempelai</h2><p class="sub">Dua keluarga, satu hari bahagia</p>
+ <div class="grid g2 mp">
+  <div class="card"><div class="foto" id="fg">W</div><h3 class="nama" id="gName"></h3><p class="sub" style="margin:8px 0">Putra dari <span id="gPar"></span><br><span id="gAddr"></span></p><a class="btn out sm" id="gIg" target="_blank" rel="noopener" hidden>Instagram</a></div>
+  <div class="amp2" aria-hidden="true">&amp;</div>
+  <div class="card"><div class="foto b" id="fb">A</div><h3 class="nama" id="bName"></h3><p class="sub" style="margin:8px 0">Putri dari <span id="bPar"></span><br><span id="bAddr"></span></p><a class="btn out sm" id="bIg" target="_blank" rel="noopener" hidden>Instagram</a></div>
+ </div>
+</section></div>
+
+<section id="cerita" class="rv">
+ <h2>Kisah Cinta Kami</h2><p class="sub">Perjalanan dari Nganjuk ke Kediri</p>
+ <div class="tl" id="story"></div>
+</section>
+
+<div class="band"><section id="acara" class="in rv">
+ <h2>Save the Date</h2>
+ <div class="cd" id="cd"><div><b>0</b><span>Hari</span></div><div><b>0</b><span>Jam</span></div><div><b>0</b><span>Menit</span></div><div><b>0</b><span>Detik</span></div></div>
+ <div class="grid g2" id="events"></div>
+ <p class="sub" style="margin-top:22px">Tema warna: <b id="dress"></b></p>
+</section></div>
+
+<section id="lokasi" class="rv">
+ <h2>Lokasi</h2><p class="sub" id="locName"></p>
+ <iframe id="map" title="Peta lokasi" class="vid" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="aspect-ratio:4/3"></iframe>
+ <p style="margin:18px 0"><a class="btn" id="mapBtn" target="_blank" rel="noopener">Buka di Google Maps</a></p>
+ <p class="sub" id="parkir"></p>
+</section>
+
+<div class="band"><section id="galeri" class="in rv">
+ <h2>Galeri</h2><p class="sub">Potret kebahagiaan kami</p>
+ <div class="gal" id="gal"></div>
+ <iframe id="vid" class="vid" title="Video pre-wedding" allowfullscreen hidden></iframe>
+</section></div>
+
+<section id="rsvp" class="rv">
+ <h2>Konfirmasi Kehadiran</h2><p class="sub">Mohon konfirmasi sebelum <b id="dl"></b></p>
+ <form id="fRsvp" class="card">
+  <div><label for="rn">Nama</label><input id="rn" required maxlength="60"></div>
+  <div><label for="rs">Kehadiran</label><select id="rs"><option>Hadir</option><option>Tidak hadir</option><option>Masih ragu</option></select></div>
+  <div><label for="rc">Jumlah tamu</label><input id="rc" type="number" min="1" max="10" value="1"></div>
+  <button class="btn" type="submit">Kirim Konfirmasi</button>
+  <p class="msg" id="rm" role="status"></p>
+ </form>
+</section>
+
+<div class="band"><section id="ucapan" class="in rv">
+ <h2>Ucapan & Doa</h2><p class="sub">Tulis doa terbaik untuk kami</p>
+ <form id="fWish" class="card">
+  <div><label for="wn">Nama</label><input id="wn" required maxlength="60"></div>
+  <div><label for="wm">Ucapan</label><textarea id="wm" required maxlength="300"></textarea></div>
+  <button class="btn" type="submit">Kirim Ucapan</button>
+  <p class="msg" id="wmsg" role="status"></p>
+ </form>
+ <div class="ws" id="ws"></div>
+</section></div>
+
+<section id="hadiah" class="rv">
+ <h2>Amplop Digital</h2><p class="sub">Doa restu Anda sudah cukup. Jika ingin berbagi tanda kasih, bisa lewat:</p>
+ <div class="grid" id="banks"></div>
+ <div class="qris" id="qris">QR Code QRIS</div>
+ <p class="sub" id="kado"></p>
+</section>
+
+<div class="band nb"><section id="info" class="in rv">
+ <h2>Info Tambahan</h2>
+ <div class="grid g2" style="text-align:left">
+  <div class="card"><h3>Protokol acara</h3><p class="sub" id="prot"></p></div>
+  <div class="card"><h3>Penginapan</h3><p class="sub" id="inap"></p></div>
+ </div>
+ <p style="margin-top:22px"><a class="btn" id="wa" target="_blank" rel="noopener">Hubungi Panitia via WhatsApp</a></p>
+</section></div>
+
+<footer>
+ <p>Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.</p>
+ <h2 style="margin:18px 0 6px">Wencen & Apriliana</h2>
+ <p id="fam"></p>
+ <p>Wassalamu'alaikum Warahmatullahi Wabarakatuh</p>
+ <small>Dibuat dengan cinta · Undangan Digital</small>
+</footer>
+
+<button class="fab" id="mus" type="button" aria-label="Putar atau jeda musik">♪</button>
+<button class="fab" id="thm" type="button" aria-label="Ganti mode terang atau gelap">☀</button>
+<div id="lb" role="dialog" aria-label="Foto"><div id="lbi"></div></div>
+<audio id="aud" loop preload="none"></audio>
+
+<script>
+/* ===== CONFIG: ubah data di sini ===== */
+const C={
+ groom:{full:"Wencen Cius Roni Anggara",par:"Bapak Mus & Ibu Muntiah",addr:"Ngronggot, Nganjuk",ig:"",photo:""},
+ bride:{full:"Apriliana Rizki Ananda",par:"Bapak Arjuna & Ibu Utami",addr:"Pare, Kediri",ig:"",photo:""},
+ events:[
+  {t:"Akad Nikah",start:"2026-12-20T08:00:00+07:00",end:"2026-12-20T10:00:00+07:00",place:"Kediaman Mempelai Wanita",addr:"Pare, Kediri"},
+  {t:"Resepsi",start:"2026-12-20T11:00:00+07:00",end:"2026-12-20T14:00:00+07:00",place:"Kediaman Mempelai Wanita",addr:"Pare, Kediri"}
+ ],
+ dress:"Cokelat kayu, krem, terracotta, dan hijau sage",
+ mapQuery:"Pare, Kediri",
+ parkir:"Parkir tersedia di sekitar lokasi. Ikuti arahan petugas di lokasi.",
+ rsvpDeadline:"2026-12-10T23:59:00+07:00",
+ story:[
+  ["Pertama Bertemu","Ceritakan pertemuan pertama kalian di sini."],
+  ["Mulai Dekat","Ceritakan awal kedekatan kalian di sini."],
+  ["Lamaran","Ceritakan momen lamaran di sini."],
+  ["Menuju Pernikahan","Dua keluarga bersatu, kami siap melangkah bersama."]
+ ],
+ photos:[],            /* isi URL foto, mis. ["foto1.jpg","foto2.jpg",...] */
+ video:"",             /* ID video YouTube, mis. "dQw4w9WgXcQ" */
+ music:"",             /* URL file mp3 */
+ musicYT:"",           /* link YouTube / YouTube Music, mis. "https://music.youtube.com/watch?v=XXXXXXXXXXX" */
+ sheetUrl:"",          /* URL Web App Apps Script */
+ adminKey:"ganti-kunci-ini",
+ wa:"6281234567890",
+ banks:[{n:"BCA",no:"1234567890",an:"Wencen Cius Roni Anggara"},{n:"DANA",no:"081234567890",an:"Apriliana Rizki Ananda"}],
+ qris:"",              /* URL gambar QRIS */
+ kado:"Alamat pengiriman kado: Pare, Kediri (lengkapi alamat).",
+ inap:"Info penginapan untuk tamu luar kota akan diinformasikan panitia.",
+ prot:"Mohon hadir tepat waktu dan menjaga kenyamanan bersama.",
+ bad:["anjing","bangsat","bajingan","kontol","memek","goblok","tolol","asu","babi"]
+};
+/* ===== helpers ===== */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=(d,o)=>new Date(d).toLocaleDateString("id-ID",{...o,timeZone:"Asia/Jakarta"});
+const full={weekday:"long",day:"numeric",month:"long",year:"numeric"};
+const tm=d=>new Date(d).toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit",timeZone:"Asia/Jakarta"}).replace(".",":");
+const clean=t=>C.bad.reduce((a,w)=>a.replace(new RegExp(w,"gi"),"***"),t);
+const q=new URLSearchParams(location.search);
+const nk=s=>String(s).toLowerCase(),isAdmin=q.get("admin")===C.adminKey;
+
+/* ===== isi konten ===== */
+const guest=(q.get("to")||"Tamu Undangan").replace(/[-_+]/g," ");
+$("#guest").textContent=guest;$("#rn").value=q.get("to")?guest:"";$("#wn").value=q.get("to")?guest:"";
+if(q.get("to")){["#rn","#wn"].forEach(i=>{$(i).readOnly=true;$(i).title="Nama sesuai undangan dan tidak dapat diubah"})}
+if(C.sheetUrl&&(!q.get("to")||!q.get("k"))){$$("#fRsvp button,#fWish button").forEach(b=>b.disabled=true);["#rm","#wmsg"].forEach(i=>{$(i).className="msg er";$(i).textContent="Gunakan link undangan pribadi dari panitia untuk mengisi form ini."})}
+$("#coverDate").textContent=fmt(C.events[0].start,full);
+[["g",C.groom],["b",C.bride]].forEach(([k,p])=>{
+ $("#"+k+"Name").textContent=p.full;if(p.photo){const f=$("#f"+k);f.style.backgroundImage=`url('${p.photo}')`;f.textContent=""}$("#"+k+"Par").textContent=p.par;$("#"+k+"Addr").textContent=p.addr;
+ if(p.ig){const a=$("#"+k+"Ig");a.href="https://instagram.com/"+p.ig.replace("@","");a.hidden=false}
+});
+$("#story").innerHTML=C.story.map(s=>`<div><h3>${esc(s[0])}</h3><p class="sub" style="margin:0">${esc(s[1])}</p></div>`).join("");
+const gcal=e=>{const z=d=>new Date(d).toISOString().replace(/[-:]|\.\d{3}/g,"");
+ return "https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(e.t+" Wencen & Apriliana")+"&dates="+z(e.start)+"/"+z(e.end)+"&location="+encodeURIComponent(e.place+", "+e.addr)};
+const ics=e=>{const z=d=>new Date(d).toISOString().replace(/[-:]|\.\d{3}/g,"");
+ return "data:text/calendar;charset=utf8,"+encodeURIComponent(`BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nSUMMARY:${e.t} Wencen & Apriliana\nDTSTART:${z(e.start)}\nDTEND:${z(e.end)}\nLOCATION:${e.place}, ${e.addr}\nEND:VEVENT\nEND:VCALENDAR`)};
+$("#events").innerHTML=C.events.map(e=>`<div class="card ev"><div class="dt"><b>${fmt(e.start,{day:"numeric"})}</b><span>${fmt(e.start,{month:"short"})}</span><small>${fmt(e.start,{year:"numeric"})}</small></div><div class="ed"><h3>${esc(e.t)}</h3><p><b>${fmt(e.start,{weekday:"long"})}</b> · ${tm(e.start)} – ${tm(e.end)} WIB</p><p class="sub" style="margin:6px 0 12px">${esc(e.place)}<br>${esc(e.addr)}</p><a class="btn sm" target="_blank" rel="noopener" href="${gcal(e)}">Google Calendar</a> <a class="btn out sm" download="${esc(e.t)}.ics" href="${ics(e)}">iCal</a></div></div>`).join("");
+$("#dress").textContent=C.dress;
+$("#locName").textContent=C.events[0].place+", "+C.events[0].addr;
+$("#map").src="https://maps.google.com/maps?q="+encodeURIComponent(C.mapQuery)+"&output=embed";
+$("#mapBtn").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(C.mapQuery);
+$("#parkir").textContent=C.parkir;
+$("#gal").innerHTML=Array.from({length:12},(_,i)=>{const u=C.photos[i];return `<button type="button" aria-label="Foto ${i+1}" data-u="${u?esc(u):""}" style="${u?`background-image:url('${esc(u)}')`:""}">${u?"":"♡"}</button>`}).join("");
+if(C.video){$("#vid").src="https://www.youtube.com/embed/"+C.video;$("#vid").hidden=false}
+$("#dl").textContent=fmt(C.rsvpDeadline,{day:"numeric",month:"long",year:"numeric"});
+$("#banks").innerHTML=C.banks.map(b=>`<div class="card bank"><div style="text-align:left"><small>${esc(b.n)}</small><br><b>${esc(b.no)}</b><br><small>a.n. ${esc(b.an)}</small></div><button class="btn sm" type="button" data-copy="${esc(b.no)}">Salin</button></div>`).join("");
+if(C.qris){$("#qris").style.backgroundImage=`url('${C.qris}')`;$("#qris").textContent=""}
+$("#kado").textContent=C.kado;$("#inap").textContent=C.inap;$("#prot").textContent=C.prot;
+$("#wa").href="https://wa.me/"+C.wa+"?text="+encodeURIComponent("Halo, saya "+guest+" tamu undangan Wencen & Apriliana.");
+$("#fam").textContent="Keluarga "+C.groom.par.replace("Bapak ","").replace("Ibu ","Ibu ")+" & Keluarga "+C.bride.par;
+$("#fam").textContent="Keluarga "+C.groom.par+" · Keluarga "+C.bride.par;
+
+/* ===== buka undangan + musik ===== */
+const aud=$("#aud");if(C.music)aud.src=C.music;
+const ytId=(u=>{try{const x=new URL(u);return x.hostname.includes("youtu.be")?x.pathname.slice(1):x.searchParams.get("v")||""}catch{return""}})(C.musicYT);
+if(!C.music&&!ytId)$("#mus").hidden=true;
+let yt=null;
+const ytCmd=f=>yt&&yt.contentWindow.postMessage(JSON.stringify({event:"command",func:f,args:""}),"*");
+const playMusic=()=>{
+ if(ytId){if(yt)ytCmd("playVideo");else{yt=document.createElement("iframe");yt.title="Musik latar";yt.allow="autoplay; encrypted-media";yt.style.cssText="position:fixed;left:-300px;bottom:0;width:200px;height:200px;border:0;pointer-events:none";yt.src="https://www.youtube.com/embed/"+ytId+"?autoplay=1&loop=1&playlist="+ytId+"&controls=0&enablejsapi=1&playsinline=1";document.body.appendChild(yt)}}
+ else if(C.music)aud.play().catch(()=>{});
+ $("#mus").classList.add("spin");$("#mus").dataset.on=1};
+const pauseMusic=()=>{ytId?ytCmd("pauseVideo"):aud.pause();$("#mus").classList.remove("spin");$("#mus").dataset.on=""};
+$("#openBtn").onclick=()=>{$("#cover").classList.add("out");document.body.classList.remove("lock");document.body.classList.add("open");playMusic();scrollTo(0,0);setTimeout(startRv,350)};
+$("#mus").onclick=()=>$("#mus").dataset.on?pauseMusic():playMusic();
+$("#thm").onclick=()=>{const r=document.documentElement,d=r.dataset.theme==="dark";r.dataset.theme=d?"light":"dark";$("#thm").textContent=d?"☀":"☾"};
+
+/* ===== countdown ===== */
+const target=new Date(C.events[0].start);
+(function tick(){let s=Math.max(0,(target-Date.now())/1e3|0);const v=[s/86400|0,s%86400/3600|0,s%3600/60|0,s%60];
+ $$("#cd b").forEach((b,i)=>b.textContent=v[i]);setTimeout(tick,1e3)})();
+
+/* ===== scroll reveal, lightbox, salin ===== */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("on");io.unobserve(e.target)}}),{threshold:.12});
+const startRv=()=>$$(".rv").forEach(el=>{
+ [...el.children].forEach((c,i)=>c.style.transitionDelay=i*.12+"s");
+ el.querySelectorAll(".g2>*").forEach((c,i)=>c.style.transitionDelay=.3+i*.18+"s");
+ el.querySelectorAll(".tl>div").forEach((c,i)=>c.style.transitionDelay=.3+i*.18+"s");
+ el.querySelectorAll(".cd div").forEach((c,i)=>c.style.transitionDelay=.4+i*.1+"s");
+ el.querySelectorAll(".gal button").forEach((c,i)=>c.style.transitionDelay=.2+i*.07+"s");
+ io.observe(el)});
+$("#gal").onclick=e=>{const b=e.target.closest("button");if(!b)return;const l=$("#lbi");
+ l.style.backgroundImage=b.dataset.u?`url('${b.dataset.u}')`:"";l.style.background=b.dataset.u?"":getComputedStyle(b).backgroundColor;
+ if(b.dataset.u){l.style.background="";l.style.backgroundImage=`url('${b.dataset.u}')`;l.style.backgroundSize="cover"}
+ l.textContent=b.dataset.u?"":"♡";$("#lb").classList.add("on")};
+$("#lb").onclick=()=>$("#lb").classList.remove("on");
+addEventListener("keydown",e=>{if(e.key==="Escape")$("#lb").classList.remove("on")});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-copy]");if(!b)return;
+ navigator.clipboard.writeText(b.dataset.copy).then(()=>{b.textContent="Tersalin";setTimeout(()=>b.textContent="Salin",1500)})});
+
+/* ===== RSVP + ucapan -> Google Sheets ===== */
+const local=k=>JSON.parse(localStorage.getItem(k)||"[]");
+const guestKey=q.get("to")||"",guestCode=q.get("k")||"";
+async function send(d){
+ d.key=guestKey||("nolink:"+d.name.toLowerCase());d.code=guestCode;
+ if(!C.sheetUrl){const k=d.type==="rsvp"?"rsvp":"wishes";const a=local(k);const row=[new Date().toISOString(),d.name,d.status||"",d.count||"",d.msg||"",d.key];const i=a.findIndex(r=>r[5]===d.key);i>=0?a[i]=row:a.push(row);localStorage.setItem(k,JSON.stringify(a));return}
+ await post(d);
+}
+async function post(d){
+ const o={method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(d)};
+ try{const r=await fetch(C.sheetUrl,o);const t=(await r.text()).trim();if(t==="invalid"||t==="forbidden")throw new Error(t);return t}
+ catch(e){if(e.message==="invalid"||e.message==="forbidden")throw e;await fetch(C.sheetUrl,{...o,mode:"no-cors"})}
+}
+async function load(){
+ if(!C.sheetUrl)return{rsvp:local("rsvp"),wishes:local("wishes")};
+ const r=await fetch(C.sheetUrl+(isAdmin?"?admin="+encodeURIComponent(C.adminKey):""));return r.json();
+}
+const closed=Date.now()>new Date(C.rsvpDeadline);
+if(closed){$("#fRsvp button").disabled=true;$("#rm").textContent="Konfirmasi kehadiran sudah ditutup.";$("#rm").className="msg er"}
+$("#fRsvp").onsubmit=async e=>{e.preventDefault();if(closed)return;const m=$("#rm");m.className="msg";m.textContent="Mengirim…";
+ try{await send({type:"rsvp",name:q.get("to")?guest:clean($("#rn").value.trim()),status:$("#rs").value,count:+$("#rc").value});
+  m.className="msg ok";m.textContent="Terima kasih, konfirmasi Anda sudah kami terima. Pilihan bisa diubah kapan saja lewat link ini.";refresh()}
+ catch(err){m.className="msg er";m.textContent=err.message==="invalid"?"Kode link tidak cocok. Gunakan link asli dari panitia.":"Gagal mengirim. Periksa koneksi lalu coba lagi."}};
+$("#fWish").onsubmit=async e=>{e.preventDefault();const m=$("#wmsg");m.className="msg";m.textContent="Mengirim…";
+ try{await send({type:"wish",name:q.get("to")?guest:clean($("#wn").value.trim()),msg:clean($("#wm").value.trim())});
+  $("#wm").value="";m.className="msg ok";m.textContent="Ucapan terkirim. Terima kasih atas doanya. Anda bisa mengubahnya lewat link ini.";setTimeout(refresh,1200)}
+ catch(err){m.className="msg er";m.textContent=err.message==="invalid"?"Kode link tidak cocok. Gunakan link asli dari panitia.":"Gagal mengirim. Periksa koneksi lalu coba lagi."}};
+function prefill(d){
+ if(window._pf||!guestKey)return;window._pf=1;
+ const r=(d.rsvp||[]).find(x=>nk(x[5])===nk(guestKey)),w=(d.wishes||[]).find(x=>nk(x[5])===nk(guestKey));
+ if(r){$("#rs").value=r[2];$("#rc").value=r[3]||1}
+ if(w)$("#wm").value=w[4];
+}
+async function refresh(){
+ try{const d=await load();prefill(d);const w=(d.wishes||[]).slice().reverse();
+  $("#ws").innerHTML=w.length?w.map(r=>`<div class="card"><b>${esc(r[1])}</b><br>${esc(r[4])}<br><small>${r[0]?fmt(r[0],{day:"numeric",month:"short",year:"numeric"}):""}</small></div>`).join(""):'<p class="sub">Belum ada ucapan. Jadilah yang pertama.</p>';
+  window._d=d;adminRender(d)}
+ catch{$("#ws").innerHTML='<p class="sub">Ucapan belum dapat dimuat.</p>'}
+}
+refresh();setInterval(refresh,30000);
+
+/* ===== admin ===== */
+if(isAdmin)$("#adm").classList.add("on");
+function adminRender(d){if(!isAdmin)return;const r=d.rsvp||[];
+ const sum=s=>r.filter(x=>x[2]===s).reduce((a,x)=>a+(+x[3]||1),0);
+ $("#stat").innerHTML=`Respons: <b>${r.length}</b> · Hadir: <b>${sum("Hadir")}</b> orang · Tidak hadir: <b>${r.filter(x=>x[2]==="Tidak hadir").length}</b> · Ragu: <b>${r.filter(x=>x[2]==="Masih ragu").length}</b> · Ucapan: <b>${(d.wishes||[]).length}</b>`;
+ if(!window._adm){admEditor(d);window._adm=1}}
+function admEditor(d){
+ const box=$("#editor"),base=location.origin+location.pathname;
+ if(!C.sheetUrl){box.innerHTML="<p>Isi sheetUrl di CONFIG agar daftar link muncul.</p>";return}
+ const T=d.tamu||[];
+ box.innerHTML=T.length?T.map(r=>{
+  const u=base+"?to="+encodeURIComponent(r[2])+"&k="+encodeURIComponent(r[3]);
+  return `<div class="er-row" data-s="${esc((r[1]+" "+r[2]+" "+u).toLowerCase())}"><small style="font-size:14px"><a href="${esc(u)}" target="_blank" rel="noopener">${esc(u)}</a></small></div>`}).join(""):"<p>Belum ada link. Buat lewat generator di bawah.</p>";
+ applyFilter();
+}
+function applyFilter(){const k=nk($("#admSearch").value.trim());let n=0,t=0;
+ $$("#editor .er-row").forEach(r=>{t++;const m=!k||r.dataset.s.includes(k);r.hidden=!m;if(m)n++});
+ $("#admCount").textContent=k?`Menampilkan ${n} dari ${t} link`:""}
+$("#admSearch").oninput=applyFilter;
+const rand=()=>{const a="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";return[...crypto.getRandomValues(new Uint8Array(8))].map(x=>a[x%a.length]).join("")};
+async function tamuMap(){const r=await fetch(C.sheetUrl+"?admin="+encodeURIComponent(C.adminKey));const d=await r.json();if(!d.tamu)throw new Error("noadmin");const m={};d.tamu.forEach(x=>m[nk(x[2])]={key:String(x[2]),code:String(x[3])});return m}
+$("#gen").onclick=async()=>{
+ const base=location.origin+location.pathname,box=$("#links");
+ const names=$("#names").value.split("\n").map(n=>n.trim()).filter(Boolean);
+ if(!names.length)return;box.textContent="Membuat link…";
+ let known={};
+ if(C.sheetUrl){try{known=await tamuMap()}catch{box.innerHTML='<b style="color:#c00">Gagal membaca data tamu. Periksa sheetUrl, tab "Tamu", dan ADMIN di Apps Script, lalu deploy versi baru.</b>';return}}
+ const seen=new Set(),codes={},keys={};
+ const items=names.map(n=>{const raw=n.replace(/\s+/g,"-"),id=nk(raw),k=known[id];const dup=!!k||seen.has(id);
+  keys[id]=keys[id]||raw;const to=k?k.key:keys[id];const code=k?k.code:(codes[id]||(codes[id]=rand()));seen.add(id);return{n,to,id,code,isNew:!dup,dup}});
+ if(C.sheetUrl){for(const it of items.filter(x=>x.isNew)){try{await post({type:"guest",adminKey:C.adminKey,name:it.n,key:it.to,code:it.code})}catch{}}
+  try{const chk=await tamuMap();items.forEach(it=>it.ok=!!chk[it.id]&&chk[it.id].code===it.code)}catch{}}
+ box.innerHTML=items.map(it=>{
+  const u=base+"?to="+encodeURIComponent(it.to)+"&k="+it.code;
+  const t=`Assalamu'alaikum ${it.n}, kami mengundang Anda ke pernikahan Wencen & Apriliana. Buka undangan: ${u}`;
+  return `<p style="margin:8px 0"><b>${esc(it.n)}</b> ${C.sheetUrl?(it.ok?"✓ tersimpan":"⚠ belum tersimpan di Sheet, coba lagi"):""}${it.dup?'<br><b style="color:#c00">⚠ Nama sudah digunakan</b>':""}<br><a href="${esc(u)}">${esc(u)}</a><br><a href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">Kirim via WhatsApp</a></p>`}).join("");window._adm=0;refresh()};
+</script>
+</body>
+</html>
