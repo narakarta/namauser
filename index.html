@@ -447,7 +447,7 @@ $("#mus").onclick=()=>$("#mus").dataset.on?pauseMusic():playMusic();
 $("#thm").onclick=()=>{const r=document.documentElement,d=r.dataset.theme==="dark";r.dataset.theme=d?"light":"dark";$("#thm").textContent=d?"☀":"☾"};
 
 /* ===== countdown ===== */
-const target=new Date(2026-12-25T10:00:00);
+const target=new Date(C.events[0].start);
 (function tick(){let s=Math.max(0,(target-Date.now())/1e3|0);const v=[s/86400|0,s%86400/3600|0,s%3600/60|0,s%60];
  $$("#cd b").forEach((b,i)=>b.textContent=v[i]);setTimeout(tick,1e3)})();
 
@@ -544,21 +544,7 @@ $("#gen").onclick=async()=>{
   try{const chk=await tamuMap();items.forEach(it=>it.ok=!!chk[it.id]&&chk[it.id].code===it.code)}catch{}}
  box.innerHTML=items.map(it=>{
   const u=base+"?to="+encodeURIComponent(it.to)+"&k="+it.code;
-  const t=`
-  Assalamu'alaikum ${it.n}, 
-  Tanpa mengurangi rasa hormat,
-  Karena keterbatasan jarak dan waktu,
-  kami bermaksud mengundang Bapak/Ibu/Saudara/i
-  dalam acara  Pernikahan yang akan diselenggarakan, pada :
-  
-  Klik link undangan berikut : ${u}
-  
-  Suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i dan teman-teman dapat hadir pada acara pernikahan kami dan memberikan doa restu.🙏
-Kami yang berbahagia,
-
-        Wencen Sekeluarga
-
-Terima kasih.`;
+  const t=`Assalamu'alaikum ${it.n}, kami mengundang Anda ke pernikahan Wencen & Apriliana. Buka undangan: ${u}`;
   return `<p style="margin:8px 0"><b>${esc(it.n)}</b> ${C.sheetUrl?(it.ok?"✓ tersimpan":"⚠ belum tersimpan di Sheet, coba lagi"):""}${it.dup?'<br><b style="color:#c00">⚠ Nama sudah digunakan</b>':""}<br><a href="${esc(u)}">${esc(u)}</a><br><a href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">Kirim via WhatsApp</a></p>`}).join("");window._adm=0;refresh()};
 </script>
 </body>
